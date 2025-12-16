@@ -5,7 +5,7 @@ import { Die3D } from './Die3D';
 
 export const DiceRoller: React.FC = () => {
   const [selectedDie, setSelectedDie] = useState<DieType>(DieType.D6);
-  const [result, setResult] = useState<number | null>(null);
+  const [result, setResult] = useState<number | null>(1); // Default to 1 for initial render
   const [isRolling, setIsRolling] = useState(false);
 
   const rollDice = () => {
@@ -18,7 +18,7 @@ export const DiceRoller: React.FC = () => {
       const newResult = Math.floor(Math.random() * selectedDie) + 1;
       setResult(newResult);
       setIsRolling(false);
-    }, 1000); // Slightly longer for 3D effect
+    }, 800); 
   };
 
   return (
@@ -33,7 +33,8 @@ export const DiceRoller: React.FC = () => {
             onClick={(e) => {
                 e.stopPropagation(); // Prevent triggering roll if bubbles up
                 setSelectedDie(type);
-                setResult(null);
+                setResult(1); // Reset to 1 visually or null
+                setIsRolling(false);
             }}
           >
             d{type}
@@ -44,10 +45,9 @@ export const DiceRoller: React.FC = () => {
       {/* Dice Display Area (Clickable) */}
       <div 
         onClick={rollDice}
-        className="relative flex items-center justify-center w-64 h-64 bg-white/10 border-2 border-black rounded-xl shadow-retro overflow-hidden cursor-pointer hover:bg-white/20 transition-colors active:scale-95 duration-100"
+        className="relative flex items-center justify-center w-64 h-64 sm:w-80 sm:h-80 bg-white/10 border-2 border-black rounded-xl shadow-retro overflow-hidden cursor-pointer hover:bg-white/20 transition-colors active:scale-95 duration-100"
       >
-        {/* We center the scene */}
-        <div className="scale-100 sm:scale-125 pointer-events-none">
+        <div className="w-full h-full pointer-events-none">
              <Die3D type={selectedDie} value={result} isRolling={isRolling} />
         </div>
       </div>
