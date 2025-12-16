@@ -59,13 +59,16 @@ export const Magic8Ball: React.FC = () => {
                   className="w-full h-full flex items-center justify-center"
                 >
                     {/* Blue Triangle - Pointing Down */}
-                    <div className="relative w-32 h-32 flex items-center justify-center">
-                        <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full text-blue-700 fill-current drop-shadow-lg">
-                            <polygon points="5,5 95,5 50,90" />
+                    <div className="relative w-32 h-32">
+                        <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full text-blue-700 fill-current drop-shadow-lg filter brightness-75">
+                            <polygon points="5,5 95,5 50,95" />
                         </svg>
-                         <p className="relative z-10 text-center text-blue-100 font-sans text-xs sm:text-sm font-bold w-24 leading-tight uppercase tracking-wider drop-shadow-md pt-2">
-                            {answer}
-                        </p>
+                         {/* Text positioned in the wider top part of the inverted triangle */}
+                         <div className="absolute top-[18%] left-1/2 -translate-x-1/2 w-24 flex items-center justify-center">
+                             <p className="text-center text-blue-100 font-sans text-[0.6rem] sm:text-[0.65rem] font-bold leading-tight uppercase tracking-wider drop-shadow-md select-none">
+                                {answer}
+                            </p>
+                         </div>
                     </div>
                 </motion.div>
               )}

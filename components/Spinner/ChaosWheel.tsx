@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { Trash2 } from 'lucide-react';
 import { RetroButton } from '../ui/RetroButton';
@@ -8,11 +8,34 @@ import { SpinnerItem } from '../../types';
 // Theme colors for slices
 const SLICE_COLORS = ['#FF6F61', '#F4D03F', '#FFFFFF', '#0F4C81', '#333333'];
 
+// Helper to assign colors ensuring no adjacent duplicates
+const assignColors = (items: SpinnerItem[]): SpinnerItem[] => {
+  const newItems = items.map(i => ({...i}));
+  
+  for (let i = 0; i < newItems.length; i++) {
+    let pool = [...SLICE_COLORS];
+    
+    // Constraint 1: Cannot match previous item
+    if (i > 0) {
+      pool = pool.filter(c => c !== newItems[i-1].color);
+    }
+    
+    // Constraint 2: Last item cannot match first item (if more than 1 item)
+    if (i === newItems.length - 1 && newItems.length > 1) {
+      pool = pool.filter(c => c !== newItems[0].color);
+    }
+    
+    // Fallback: If pool is empty (shouldn't happen with 5 colors), use random
+    newItems[i].color = pool[0] || SLICE_COLORS[0];
+  }
+  return newItems;
+};
+
 export const ChaosWheel: React.FC = () => {
-  const [items, setItems] = useState<SpinnerItem[]>([
-    { id: '1', label: 'Yes', color: '#FF6F61' },
-    { id: '2', label: 'No', color: '#F4D03F' },
-  ]);
+  const [items, setItems] = useState<SpinnerItem[]>(assignColors([
+    { id: '1', label: 'Yes', color: '' },
+    { id: '2', label: 'No', color: '' },
+  ]));
   const [inputValue, setInputValue] = useState('');
   const [winner, setWinner] = useState<string | null>(null);
   const [isSpinning, setIsSpinning] = useState(false);
@@ -26,14 +49,14 @@ export const ChaosWheel: React.FC = () => {
     
     const cleanLabel = sanitizeInput(inputValue);
     if (cleanLabel.length > 0) {
-      setItems([
-        ...items, 
-        { 
-          id: Date.now().toString(), 
-          label: cleanLabel, 
-          color: SLICE_COLORS[items.length % SLICE_COLORS.length] 
-        }
-      ]);
+      const newItem = { 
+        id: Date.now().toString(), 
+        label: cleanLabel, 
+        color: '' // Will be assigned by assignColors
+      };
+      
+      const updatedList = [...items, newItem];
+      setItems(assignColors(updatedList));
       setInputValue('');
       setWinner(null);
     }
@@ -41,7 +64,8 @@ export const ChaosWheel: React.FC = () => {
 
   const handleDeleteItem = (id: string) => {
     if (isSpinning) return;
-    setItems(items.filter(i => i.id !== id));
+    const filtered = items.filter(i => i.id !== id);
+    setItems(assignColors(filtered));
     setWinner(null);
   };
 
@@ -69,15 +93,11 @@ export const ChaosWheel: React.FC = () => {
     rotationRef.current = targetRotation;
     
     // Calculate winner
-    // The pointer is at the top (0 degrees or 360 degrees visually).
-    // CSS rotate moves the wheel clockwise.
-    // The slice at the top is determined by: (360 - (finalRotation % 360)) % 360
     const normalizedRotation = targetRotation % 360;
     const anglePerSlice = 360 / items.length;
     
-    // Adjust pointer logic: 
-    // If wheel rotates +90deg, the slice at 270deg (original position) is now at top (0deg).
-    // So we look for the slice that covers the angle (360 - normalizedRotation).
+    // Pointer is at top (0deg). Wheel rotates CW.
+    // The slice under the pointer is at (360 - rotation)
     const pointerAngle = (360 - normalizedRotation) % 360;
     const winningIndex = Math.floor(pointerAngle / anglePerSlice);
     
@@ -111,19 +131,30 @@ export const ChaosWheel: React.FC = () => {
                 className="w-full h-full rounded-full border-4 border-black shadow-retro overflow-hidden relative"
                 style={{ background: items.length > 0 ? gradient : '#333' }}
             >
-               {/* Slice Labels (Tricky to position perfectly in generic conic, simple overlay here) */}
+               {/* Slice Labels */}
                {items.length > 0 && items.map((item, i) => {
+                   // Calculate center angle of the slice
                    const angle = (360 / items.length) * i + (360 / items.length) / 2;
                    const isLight = item.color === '#FFFFFF' || item.color === '#F4D03F' || item.color === '#FF6F61';
+                   
                    return (
                        <div 
                          key={item.id}
-                         className="absolute top-1/2 left-1/2 w-1 h-[50%] origin-top -translate-x-1/2 text-xs font-bold pt-8"
+                         // Container acts as the "spoke" from center to edge.
+                         // h-[50%] is radius length.
+                         // Flex centers the text block in the middle of this radius.
+                         className="absolute top-1/2 left-1/2 h-[50%] w-8 -translate-x-1/2 origin-top flex justify-center pt-8 pb-4 pointer-events-none"
                          style={{ transform: `rotate(${angle}deg)` }}
                        >
+                           {/* 
+                             Use writing-mode: vertical-rl to handle text layout properly along the radius.
+                             This ensures length calculations (truncation) work on the vertical axis.
+                           */}
                            <span 
-                             className="block transform -rotate-90 origin-center truncate w-20 text-center"
+                             className="block truncate text-center font-bold text-xs sm:text-sm max-h-[90%] w-full"
                              style={{ 
+                                 writingMode: 'vertical-rl',
+                                 textOrientation: 'mixed', // Rotates latin characters 90deg CW
                                  color: isLight ? 'black' : 'white',
                                  textShadow: isLight ? 'none' : '1px 1px 0px rgba(0,0,0,0.5)'
                             }}
