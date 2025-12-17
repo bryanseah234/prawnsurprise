@@ -120,27 +120,38 @@ const getDieConfig = (type: DieType) => {
 
     case DieType.D10: {
         // Custom D10
-        // Calculated distance to face is approx 0.77
+        // Radius=1, Height=1.2
+        // Face angle logic needs to align with the slope of the pyramid.
+        // Slope vector is (1.2, 1) relative to (r, y).
         const d10Geo = createD10Geometry();
         const d10Faces = [];
+        
+        // Slope factor for normal calculation
+        // For a cone with radius R and height H, normal has slope R/H in (r,y) space? 
+        // Normal vector N = (H, R)
+        const slopeH = 1.2;
+        const slopeR = 1.0;
+
         for(let i=0; i<5; i++) {
+             // Rotate by PI/5 to align with face centers (between vertices)
              const angle = (i / 5) * Math.PI * 2 + (Math.PI/5); 
-             // Top faces
+             
+             // Top faces: Normal points UP and OUT
              d10Faces.push({
                  value: i * 2 + 1,
-                 normal: new THREE.Vector3(Math.sin(angle), 0.5, Math.cos(angle)).normalize()
+                 normal: new THREE.Vector3(Math.sin(angle) * slopeH, slopeR, Math.cos(angle) * slopeH).normalize()
              });
-             // Bottom faces
+             // Bottom faces: Normal points DOWN and OUT
              d10Faces.push({
                  value: i * 2 + 2,
-                 normal: new THREE.Vector3(Math.sin(angle), -0.5, Math.cos(angle)).normalize()
+                 normal: new THREE.Vector3(Math.sin(angle) * slopeH, -slopeR, Math.cos(angle) * slopeH).normalize()
              });
         }
 
         return {
             geometry: d10Geo,
-            textOffset: 0.8, // Adjusted to sit just on the surface (0.77 -> 0.8)
-            fontSize: 0.3, // Smaller font to fit narrow faces
+            textOffset: 0.95, // Increased offset to safely clear the geometry (Face distance ~0.77)
+            fontSize: 0.35, 
             faces: d10Faces
         };
     }
