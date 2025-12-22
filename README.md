@@ -1,4 +1,4 @@
-# Prawn Surprise ?!
+# The Prawn Surprise
 
 A retro-themed, chaotic decision-making web application featuring pixel art aesthetics and neo-brutalist design.
 
