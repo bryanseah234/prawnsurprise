@@ -93,9 +93,9 @@ export const Magic8Ball: React.FC = () => {
         </motion.div>
       </div>
       
-      <p className="mt-8 font-retro text-zest text-xs animate-bounce">
+      <p className="mt-8 font-retro text-zest text-xs animate-bounce text-center w-full px-4">
         {isShaking ? 'CONSULTING THE VOID...' : 'CLICK THE ORB TO SEEK WISDOM'}
       </p>
     </div>
   );
-};
+}
