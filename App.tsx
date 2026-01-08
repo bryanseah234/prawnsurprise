@@ -11,7 +11,7 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center">
-      
+
       {/* Header */}
       <header className="w-full bg-coral border-b-4 border-black p-6 shadow-retro z-10">
         <div className="max-w-4xl mx-auto flex items-center justify-center">
@@ -24,20 +24,20 @@ const App: React.FC = () => {
       {/* Navigation Tabs */}
       <nav className="w-full max-w-4xl mx-auto mt-8 px-2">
         <div className="flex flex-nowrap justify-center gap-1">
-          <TabButton 
-            isActive={activeTab === Tab.DICE} 
+          <TabButton
+            isActive={activeTab === Tab.DICE}
             onClick={() => setActiveTab(Tab.DICE)}
             icon={<Dices className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />}
-            label="DICE ROLLER"
+            label="DICE ROLL"
           />
-          <TabButton 
-            isActive={activeTab === Tab.SPINNER} 
+          <TabButton
+            isActive={activeTab === Tab.SPINNER}
             onClick={() => setActiveTab(Tab.SPINNER)}
             icon={<Disc className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />}
             label="CHAOS WHEEL"
           />
-          <TabButton 
-            isActive={activeTab === Tab.MAGIC_BALL} 
+          <TabButton
+            isActive={activeTab === Tab.MAGIC_BALL}
             onClick={() => setActiveTab(Tab.MAGIC_BALL)}
             icon={<Sparkles className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />}
             label="8-BALL"
@@ -81,8 +81,8 @@ const TabButton: React.FC<TabButtonProps> = ({ isActive, onClick, icon, label })
       onClick={onClick}
       className={cn(
         "flex items-center px-2 sm:px-4 py-2 sm:py-3 font-retro text-[8px] sm:text-xs border-2 border-black transition-all whitespace-nowrap",
-        isActive 
-          ? "bg-zest text-black shadow-none translate-y-1 z-10 relative" 
+        isActive
+          ? "bg-zest text-black shadow-none translate-y-1 z-10 relative"
           : "bg-white text-gray-500 shadow-retro hover:bg-gray-100 hover:translate-y-[2px] hover:shadow-retro-active"
       )}
     >
