@@ -37,7 +37,6 @@ export const ChaosWheel: React.FC = () => {
     { id: '2', label: 'No', color: '' },
   ]));
   const [inputValue, setInputValue] = useState('');
-  const [winner, setWinner] = useState<string | null>(null);
   const [isSpinning, setIsSpinning] = useState(false);
   
   const controls = useAnimation();
@@ -58,7 +57,6 @@ export const ChaosWheel: React.FC = () => {
       const updatedList = [...items, newItem];
       setItems(assignColors(updatedList));
       setInputValue('');
-      setWinner(null);
     }
   };
 
@@ -66,14 +64,12 @@ export const ChaosWheel: React.FC = () => {
     if (isSpinning) return;
     const filtered = items.filter(i => i.id !== id);
     setItems(assignColors(filtered));
-    setWinner(null);
   };
 
   const handleSpin = async () => {
     if (isSpinning || items.length < 2) return;
 
     setIsSpinning(true);
-    setWinner(null);
 
     // Random rotations: at least 5 full spins (1800 deg) + random offset
     const randomOffset = Math.random() * 360;
@@ -91,17 +87,6 @@ export const ChaosWheel: React.FC = () => {
     });
 
     rotationRef.current = targetRotation;
-    
-    // Calculate winner
-    const normalizedRotation = targetRotation % 360;
-    const anglePerSlice = 360 / items.length;
-    
-    // Pointer is at top (0deg). Wheel rotates CW.
-    // The slice under the pointer is at (360 - rotation)
-    const pointerAngle = (360 - normalizedRotation) % 360;
-    const winningIndex = Math.floor(pointerAngle / anglePerSlice);
-    
-    setWinner(items[winningIndex].label);
     setIsSpinning(false);
   };
 
@@ -166,17 +151,6 @@ export const ChaosWheel: React.FC = () => {
                })}
             </motion.div>
         </div>
-
-        {winner && (
-            <motion.div 
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="bg-zest border-2 border-black p-4 shadow-retro mb-4 text-center w-full"
-            >
-                <p className="font-retro text-xs text-black mb-1">THE CHAOS GODS CHOSE:</p>
-                <p className="font-bold text-2xl text-black break-words">{winner}</p>
-            </motion.div>
-        )}
 
         <RetroButton 
             onClick={handleSpin} 
