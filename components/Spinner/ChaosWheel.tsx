@@ -189,18 +189,18 @@ export const ChaosWheel: React.FC = () => {
 
       {/* Controls Section */}
       <div className="flex flex-col w-full lg:w-1/2 bg-white/5 border-2 border-black p-4 shadow-retro">
-        <h3 className="font-retro text-sm mb-4">CHAOS OPTIONS ({items.length}/10)</h3>
+        <h3 className="font-retro text-sm mb-4 text-center">CHAOS OPTIONS ({items.length}/10)</h3>
         
-        <form onSubmit={handleAddItem} className="flex gap-2 mb-4">
+        <form onSubmit={handleAddItem} className="flex gap-2 mb-4 w-full">
             <input 
                 type="text" 
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 disabled={items.length >= 10 || isSpinning}
-                placeholder={items.length >= 10 ? "Max capacity reached" : "Add option..."}
-                className="flex-1 bg-white text-black font-sans px-3 py-2 border-2 border-black focus:outline-none focus:shadow-retro transition-shadow text-sm"
+                placeholder={items.length >= 10 ? "Max reached" : "Add option..."}
+                className="flex-1 min-w-0 bg-white text-black font-sans px-2 sm:px-3 py-2 border-2 border-black focus:outline-none focus:shadow-retro transition-shadow text-sm"
             />
-            <RetroButton type="submit" disabled={items.length >= 10 || isSpinning || !inputValue.trim()}>
+            <RetroButton type="submit" disabled={items.length >= 10 || isSpinning || !inputValue.trim()} className="shrink-0 px-2 sm:px-4">
                 ADD
             </RetroButton>
         </form>
