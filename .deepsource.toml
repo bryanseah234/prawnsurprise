@@ -1,0 +1,18 @@
+version = 1
+
+[[analyzers]]
+name = "javascript"
+
+  [analyzers.meta]
+  plugins = [
+    "react",
+    "angular"
+  ]
+  environment = [
+    "nodejs",
+    "jquery",
+    "browser",
+    "jest",
+    "cypress",
+    "mongo"
+  ]
