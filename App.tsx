@@ -40,7 +40,7 @@ const App: React.FC = () => {
             isActive={activeTab === Tab.MAGIC_BALL} 
             onClick={() => setActiveTab(Tab.MAGIC_BALL)}
             icon={<Sparkles className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />}
-            label="MAGIC 8-BALL"
+            label="8-BALL"
           />
         </div>
       </nav>
