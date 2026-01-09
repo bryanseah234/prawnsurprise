@@ -16,7 +16,7 @@
     "react-dom": "^18.2.0",
     "tailwind-merge": "^2.2.1",
     "three": "^0.160.0",
-    "@react-three/fiber": "^8.15.14",
+    "@react-three/fiber": "^9.5.0",
     "@react-three/drei": "^9.96.1"
   },
   "devDependencies": {
